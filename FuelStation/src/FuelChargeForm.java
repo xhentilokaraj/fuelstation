@@ -8,6 +8,7 @@
  *
  * @author User
  */
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -28,6 +29,7 @@ public class FuelChargeForm extends JFrame {
     private JTextField customerInput;
     private JTextField fuelAmtInput;
     private JTextField moneyAmtInput;
+    private JButton submitBtn;
 
     public FuelChargeForm() {
         fuelInputFrame = new JFrame("Input Fuel Charge");
@@ -64,7 +66,11 @@ public class FuelChargeForm extends JFrame {
         moneyAmtInput = new JTextField();
         moneyAmtInput.setBounds(140, 100, 120, 30);
         fuelInputFrame.add(moneyAmtInput);
-        
+
+        submitBtn = new JButton("OK");
+        submitBtn.setBounds(10, 170, 200, 20);
+        fuelInputFrame.add(submitBtn);
+
         jScrollPane1 = new JScrollPane();
 
         fuelInputFrame.setSize(400, 400);
