@@ -43,5 +43,4 @@ public class Customer {
     public void setLastname(String lastname) {
         this.lastname = lastname;
     }
-
 }
