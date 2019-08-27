@@ -14,5 +14,7 @@ public class Demo {
         
         System.out.println(fuelPump1.toString());
         
+        new FuelChargeForm();
+        
     }
 }
