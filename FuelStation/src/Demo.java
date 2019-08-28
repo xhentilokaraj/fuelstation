@@ -24,7 +24,7 @@ public class Demo {
         System.out.println(fuelpumps[0].toString());
         
         new FuelChargeForm();
-        new FuelChargeForm();
+        new PumpDisplay();
         
     }
 }
