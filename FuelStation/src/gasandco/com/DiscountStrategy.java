@@ -1,3 +1,8 @@
+package gasandco.com;
+
+
+import java.math.BigDecimal;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -8,6 +13,8 @@
  *
  * @author User
  */
-public class SystemController {
-    
+public interface DiscountStrategy {
+
+ BigDecimal applyDiscount(BigDecimal amount);
+ 
 }

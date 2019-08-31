@@ -1,3 +1,5 @@
+package gasandco.com;
+
 
 import java.math.BigDecimal;
 
@@ -13,23 +15,22 @@ import java.math.BigDecimal;
 public class FuelCharge {
 
     private int chargeId;
-    private int fuelPumpId;
-    private String status;
+    private FuelPump fuelPump;
     private float fuelAmount;
     private BigDecimal moneyAmount;
-    private Customer client;
+    private Customer customer;
 
-    public FuelCharge(int chargeId, int fuelPumpId) {
+    public FuelCharge(int chargeId, FuelPump fuelPump, float fuelAmount, BigDecimal moneyAmount, Customer customer) {
         this.chargeId = chargeId;
-        this.fuelPumpId = fuelPumpId;
+        this.fuelPump = fuelPump;
+        this.fuelAmount = fuelAmount;
+        this.moneyAmount = moneyAmount;
+        this.customer = customer;
     }
+    
 
     public int getChargeId() {
         return chargeId;
-    }
-
-    public String getStatus() {
-        return status;
     }
 
     public float getFuelAmount() {
@@ -40,13 +41,7 @@ public class FuelCharge {
         return moneyAmount;
     }
 
-    public Customer getClient() {
-        return client;
-    }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
 
     public void setFuelAmount(float fuelAmount) {
         this.fuelAmount = fuelAmount;
@@ -56,9 +51,7 @@ public class FuelCharge {
         this.moneyAmount = moneyAmount;
     }
 
-    public void setClient(Customer client) {
-        this.client = client;
-    }
+
 
     public BigDecimal getTotal() {
         return this.getMoneyAmount().multiply(new BigDecimal(Float.toString(this.getFuelAmount())));

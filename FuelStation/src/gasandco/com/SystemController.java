@@ -1,5 +1,4 @@
-
-import java.math.BigDecimal;
+package gasandco.com;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -11,8 +10,6 @@ import java.math.BigDecimal;
  *
  * @author User
  */
-public interface DiscountStrategy {
-
- BigDecimal applyDiscount(BigDecimal amount);
- 
+public class SystemController {
+    
 }
