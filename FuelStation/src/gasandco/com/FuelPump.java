@@ -52,6 +52,8 @@ public class FuelPump extends Observable {
 
     public void setStatus(String status) {
         this.status = status;
+        setChanged();
+        notifyObservers(this.status);
     }
 
     public BigDecimal getFuelPrice() {
@@ -63,13 +65,8 @@ public class FuelPump extends Observable {
     }
 
     public void setTotalFuelAmt(float totalFuelAmt) {
-        float actualAmount = this.getTotalFuelAmt();
         if (totalFuelAmt >= 0) {
             this.totalFuelAmt = totalFuelAmt;
-        }
-        if(actualAmount > this.totalFuelAmt) {
-            setChanged();
-            notifyObservers(actualAmount - this.totalFuelAmt);
         }
     }
 

@@ -26,10 +26,10 @@ public class Demo {
         customers.add(new Customer(9065, "Eddard", "Stark"));
         customers.add(new Customer(2845, "Robert", "Baratheon"));
         customers.add(new Customer(8561, "Cersey", "Lannister"));
-        
+
         ArrayList<FuelCharge> fuelcharges = new ArrayList<FuelCharge>();
 
-        System.out.println(fuelpumps.get(0).toString());
+        //System.out.println(fuelpumps.get(0).toString());
 
         FuelDisplayForm fuelForm = new FuelDisplayForm(fuelpumps, customers, fuelcharges);
 

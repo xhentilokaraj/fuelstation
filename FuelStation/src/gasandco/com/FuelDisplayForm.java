@@ -6,6 +6,7 @@
 package gasandco.com;
 
 import java.awt.HeadlessException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 
@@ -204,7 +205,10 @@ public class FuelDisplayForm extends javax.swing.JFrame {
             this.customerName.setText("Anonymous");
         }
         FuelPump fuelPump =(FuelPump) this.fuelPumpType.getSelectedItem();
-        FuelCharge fuelCharge
+        FuelCharge fuelCharge = new FuelCharge(fuelPump, Float.valueOf(this.fuelAmount.getText()), new BigDecimal(this.amountMoney.getText()), customer);
+        fuelCharges.add(fuelCharge);
+        
+        System.out.println(fuelCharge);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void fuelAmountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fuelAmountActionPerformed
