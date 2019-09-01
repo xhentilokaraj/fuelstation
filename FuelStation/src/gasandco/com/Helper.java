@@ -13,16 +13,16 @@ import java.util.Iterator;
  * @author User
  */
 public class Helper {
-    
-    public static Customer getCustomerById(ArrayList<Customer> customers,int id) {
-        Iterator<Customer> iter = customers.iterator(); 
-        while (iter.hasNext()) { 
+
+    public static Customer getCustomerById(ArrayList<Customer> customers, int id) {
+        Iterator<Customer> iter = customers.iterator();
+        while (iter.hasNext()) {
             Customer customer = iter.next();
-            if(customer.getCustomerId()==id){
+            if (customer.getCustomerId() == id) {
                 return customer;
             }
         }
         return null;
     }
-    
+
 }

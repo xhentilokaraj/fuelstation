@@ -86,24 +86,53 @@ public class FuelCharge extends Observable {
     }
 
     public void chargeInProgress() throws InterruptedException {
+        fuelPump.setStatus("Dispensing");
         BigDecimal price = this.fuelPump.getFuelType().getFuelPrice();
-        System.out.println(fuelAmount);
-        int iterations = Math.round(fuelAmount);
+        System.out.println(this.fuelAmount);
+        int iterations = Math.round(this.fuelAmount);
+        if (iterations - this.fuelAmount > 0) {
+            iterations--;
+        }
+        final boolean isInteger = (iterations - this.fuelAmount == 0);
+        final int lastIteration = iterations;
+        TimerTask task;
         for (int i = 0; i < iterations; i++) {
+            String currentPrice = new BigDecimal(String.valueOf(i + 1)).multiply(price).toString();
+            String currentFuelAmount = String.valueOf(i + 1);
+            final String[] values = {currentPrice, currentFuelAmount};
             Timer timer = new Timer();
             final int j = i;
 
-            TimerTask task;
             task = new TimerTask() {
                 @Override
                 public void run() {
                     setChanged();
-                    notifyObservers(j + 1);
+                    notifyObservers(values);
+                    if (isInteger && (j + 1) == lastIteration) {
+                        fuelPump.setStatus("Free");
+                    }
                     cancel();
                 }
             };
             timer.schedule(task, 500 * (j + 1), 100);
         }
+        if (iterations < this.fuelAmount) {
+            String currentPrice = this.moneyAmount.toString();
+            String currentFuelAmount = String.valueOf(this.fuelAmount);
+            final String[] values = {currentPrice, currentFuelAmount};
+            Timer timer = new Timer();
+            task = new TimerTask() {
+                @Override
+                public void run() {
+                    setChanged();
+                    notifyObservers(values);
+                    fuelPump.setStatus("Free");
+                    cancel();
+                }
+            };
+            timer.schedule(task, 500 * (iterations + 1), 100);
+        }
+
     }
 
     @Override

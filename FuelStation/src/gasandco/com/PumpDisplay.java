@@ -134,13 +134,17 @@ public class PumpDisplay extends javax.swing.JFrame implements Observer {
     }
     
     @Override
-    public void update(Observable o, Object totalFuelAmt)  {
-//        this.setNews((int) totalFuelAmt);
-          repaint();
-          this.fuelAmount.setText(String.valueOf((int)totalFuelAmt));
-          System.out.println(totalFuelAmt);
+    public void update(Observable o, Object totalFuelAmt) {
+        if (totalFuelAmt instanceof String) {
+            this.pumpStatus.setText((String) totalFuelAmt);
+        } else {
+            String[] values = (String[]) totalFuelAmt;
+            this.amountInEuro.setText(values[0]);
+            this.fuelAmount.setText(values[1]);
+            System.out.println(values);
+        }
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField amountInEuro;
     private javax.swing.JTextField fuelAmount;
