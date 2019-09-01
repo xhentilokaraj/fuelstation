@@ -1,8 +1,12 @@
 package gasandco.com;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Observable;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -27,6 +31,14 @@ public class FuelCharge extends Observable {
         this.fuelAmount = fuelAmount;
         this.moneyAmount = moneyAmount;
         this.customer = customer;
+        System.out.println("test");
+        System.out.println(this.moneyAmount);
+        if (this.fuelAmount != 0) {
+            calculateMoneyAmount();
+        } else if (this.moneyAmount != null) {
+            calculateFuelAmount();
+        }
+
     }
 
     public int getChargeId() {
@@ -46,11 +58,11 @@ public class FuelCharge extends Observable {
     }
 
     public void calculateFuelAmount() {
-        this.fuelAmount = this.moneyAmount.divide(this.fuelPump.getFuelPrice()).setScale(2, RoundingMode.DOWN).floatValue();
+        this.fuelAmount = this.moneyAmount.divide(this.fuelPump.getFuelType().getFuelPrice(), 2, RoundingMode.HALF_EVEN).floatValue();
     }
 
     public void calculateMoneyAmount() {
-        this.moneyAmount =  new BigDecimal(Float.toString(this.fuelAmount)).multiply(this.fuelPump.getFuelPrice());
+        this.moneyAmount = new BigDecimal(Float.toString(this.fuelAmount)).multiply(this.fuelPump.getFuelType().getFuelPrice());
     }
 
     public void setMoneyAmount(BigDecimal moneyAmount) {
@@ -73,12 +85,25 @@ public class FuelCharge extends Observable {
         return this.getMoneyAmount().multiply(new BigDecimal(Float.toString(this.getFuelAmount())));
     }
 
-    public public void chargeInProgress() {
-        int setChanged
-        ();
-        String changes[
-        2] = [];
-        notifyObservers(this.status);
+    public void chargeInProgress() throws InterruptedException {
+        BigDecimal price = this.fuelPump.getFuelType().getFuelPrice();
+        System.out.println(fuelAmount);
+        int iterations = Math.round(fuelAmount);
+        for (int i = 0; i < iterations; i++) {
+            Timer timer = new Timer();
+            final int j = i;
+
+            TimerTask task;
+            task = new TimerTask() {
+                @Override
+                public void run() {
+                    setChanged();
+                    notifyObservers(j + 1);
+                    cancel();
+                }
+            };
+            timer.schedule(task, 500 * (j + 1), 100);
+        }
     }
 
     @Override

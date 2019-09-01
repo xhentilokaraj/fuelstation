@@ -15,11 +15,15 @@ import java.util.ArrayList;
 public class Demo {
 
     public static void main(String[] args) {
+        ArrayList<FuelType> fuelTypes = new ArrayList<FuelType>();
+        fuelTypes.add(new FuelType("diesel 10ppm", BigDecimal.valueOf(173)));
+        fuelTypes.add(new FuelType("diesel unleaded", BigDecimal.valueOf(180)));
+        fuelTypes.add(new FuelType("gasoline", BigDecimal.valueOf(60)));
 
         ArrayList<FuelPump> fuelpumps = new ArrayList<FuelPump>();
-        fuelpumps.add(new FuelPump(1, "diesel 10ppm", "liters", 3000, BigDecimal.valueOf(10)));
-        fuelpumps.add(new FuelPump(2, "diesel unleaded", "gallons", 3000, BigDecimal.valueOf(10)));
-        fuelpumps.add(new FuelPump(3, "gasoline", "liters", 3000, BigDecimal.valueOf(10)));
+        fuelpumps.add(new FuelPump(1, fuelTypes.get(0), "liters", 3000));
+        fuelpumps.add(new FuelPump(2, fuelTypes.get(1), "gallons", 3000));
+        fuelpumps.add(new FuelPump(3, fuelTypes.get(2), "liters", 3000));
 
         ArrayList<Customer> customers = new ArrayList<Customer>();
         customers.add(new Customer(4875, "John", "Snow"));
@@ -30,10 +34,10 @@ public class Demo {
         ArrayList<FuelCharge> fuelcharges = new ArrayList<FuelCharge>();
 
         //System.out.println(fuelpumps.get(0).toString());
-
-        FuelDisplayForm fuelForm = new FuelDisplayForm(fuelpumps, customers, fuelcharges);
-
+        PumpDisplay pumpDisplay = new PumpDisplay();
+        FuelChargeForm fuelForm = new FuelChargeForm(fuelpumps, customers, fuelcharges, pumpDisplay);
         fuelForm.setVisible(true);
+        pumpDisplay.setVisible(true);
 
     }
 

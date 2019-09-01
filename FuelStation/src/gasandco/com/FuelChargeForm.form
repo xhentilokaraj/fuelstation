@@ -35,7 +35,7 @@
                       <EmptySpace min="71" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="fuelAmount" min="-2" pref="160" max="-2" attributes="0"/>
-                          <Component id="fuelPumpType" min="-2" max="-2" attributes="0"/>
+                          <Component id="fuelPump" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
@@ -71,7 +71,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel1" alignment="3" min="-2" pref="37" max="-2" attributes="0"/>
-                  <Component id="fuelPumpType" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="fuelPump" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="customerName" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="customerSurname" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
@@ -126,7 +126,7 @@
         <Property name="text" type="java.lang.String" value="Fuel Amount"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JComboBox" name="fuelPumpType">
+    <Component class="javax.swing.JComboBox" name="fuelPump">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="4">
@@ -138,7 +138,7 @@
         </Property>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fuelPumpTypeActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fuelPumpActionPerformed"/>
       </Events>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
