@@ -16,9 +16,9 @@ public class Demo {
 
     public static void main(String[] args) {
         ArrayList<FuelType> fuelTypes = new ArrayList<FuelType>();
-        fuelTypes.add(new FuelType("diesel 10ppm", BigDecimal.valueOf(5)));
-        fuelTypes.add(new FuelType("diesel unleaded", BigDecimal.valueOf(180)));
-        fuelTypes.add(new FuelType("gasoline", BigDecimal.valueOf(60)));
+        fuelTypes.add(new FuelType("diesel 10ppm", BigDecimal.valueOf(1.5)));
+        fuelTypes.add(new FuelType("diesel unleaded", BigDecimal.valueOf(1.80)));
+        fuelTypes.add(new FuelType("gasoline", BigDecimal.valueOf(0.60)));
 
         ArrayList<FuelPump> fuelpumps = new ArrayList<FuelPump>();
         fuelpumps.add(new FuelPump(1, fuelTypes.get(0), "liters", 3000));
@@ -30,9 +30,6 @@ public class Demo {
         customers.add(new Customer(9065, "Eddard", "Stark"));
         customers.add(new Customer(2845, "Robert", "Baratheon"));
         customers.add(new Customer(8561, "Cersey", "Lannister"));
-
-        FreeFirstUnitsDiscount freeFirstUnitsStrategy = new FreeFirstUnitsDiscount(10);
-        AmountThresholdDiscount amtThresholdDiscount = new AmountThresholdDiscount(BigDecimal.valueOf(20));
 
         ArrayList<FuelCharge> fuelcharges = new ArrayList<FuelCharge>();
 

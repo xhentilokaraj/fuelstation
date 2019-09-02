@@ -24,19 +24,21 @@ public class FuelCharge extends Observable {
     private float fuelAmount;
     private BigDecimal moneyAmount;
     private Customer customer;
+    private BigDecimal moneyDiscount;
+    private float fuelDiscount;
 
-    public FuelCharge(FuelPump fuelPump, float fuelAmount, BigDecimal moneyAmount, Customer customer) {
+    public FuelCharge(FuelPump fuelPump, float fuelAmount, BigDecimal moneyAmount, Customer customer, DiscountStrategy discountStrategy) {
 //        this.chargeId = chargeId;
         this.fuelPump = fuelPump;
         this.fuelAmount = fuelAmount;
         this.moneyAmount = moneyAmount;
         this.customer = customer;
-        System.out.println("test");
         System.out.println(this.moneyAmount);
+
         if (this.fuelAmount != 0) {
-            calculateMoneyAmount();
+            calculateMoneyAmount(discountStrategy);
         } else if (this.moneyAmount != null) {
-            calculateFuelAmount();
+            calculateFuelAmount(discountStrategy);
         }
 
     }
@@ -57,12 +59,14 @@ public class FuelCharge extends Observable {
         this.fuelAmount = fuelAmount;
     }
 
-    public void calculateFuelAmount() {
+    private void calculateFuelAmount(DiscountStrategy discountStrategy) {
         this.fuelAmount = this.moneyAmount.divide(this.fuelPump.getFuelType().getFuelPrice(), 2, RoundingMode.HALF_EVEN).floatValue();
+        this.fuelDiscount = discountStrategy.applyDiscountFuelAmt(moneyAmount);
     }
 
-    public void calculateMoneyAmount() {
+    private void calculateMoneyAmount(DiscountStrategy discountStrategy) {
         this.moneyAmount = new BigDecimal(Float.toString(this.fuelAmount)).multiply(this.fuelPump.getFuelType().getFuelPrice());
+        this.moneyDiscount = discountStrategy.applyDiscountMoneyAmt(fuelAmount);
     }
 
     public void setMoneyAmount(BigDecimal moneyAmount) {
@@ -81,6 +85,14 @@ public class FuelCharge extends Observable {
         this.chargeId = chargeId;
     }
 
+    public BigDecimal getMoneyDiscount() {
+        return moneyDiscount;
+    }
+
+    public float getFuelDiscount() {
+        return fuelDiscount;
+    }
+
     public BigDecimal getTotal() {
         return this.getMoneyAmount().multiply(new BigDecimal(Float.toString(this.getFuelAmount())));
     }
@@ -90,16 +102,37 @@ public class FuelCharge extends Observable {
         BigDecimal price = this.fuelPump.getFuelType().getFuelPrice();
         System.out.println(this.fuelAmount);
         int iterations = Math.round(this.fuelAmount);
+        
+        System.out.println("=========================");
+        System.out.println(this.getMoneyDiscount());
+        System.out.println("=========================");
+        System.out.println(this.getFuelDiscount());
+        final boolean isInteger = (iterations - this.fuelAmount == 0);
+        if(this.getMoneyDiscount()==null && this.getFuelDiscount()>0){
+            iterations = Math.round(this.getFuelDiscount()+this.fuelAmount); 
+        }
         if (iterations - this.fuelAmount > 0) {
             iterations--;
         }
-        final boolean isInteger = (iterations - this.fuelAmount == 0);
         final int lastIteration = iterations;
         TimerTask task;
         for (int i = 0; i < iterations; i++) {
-            String currentPrice = new BigDecimal(String.valueOf(i + 1)).multiply(price).toString();
-            String currentFuelAmount = String.valueOf(i + 1);
-            final String[] values = {currentPrice, currentFuelAmount};
+            BigDecimal currentPrice;
+            String currentPriceString;
+            String currentFuelAmount;
+            currentPrice = new BigDecimal(String.valueOf(Math.round((i+1)-this.getFuelDiscount()))).multiply(price);
+            if(this.getMoneyDiscount()==null && this.getFuelDiscount()>=(i+1)){
+                currentPrice = BigDecimal.ZERO;
+            }
+            else if(this.getMoneyDiscount()!=null && currentPrice.compareTo(this.getMoneyDiscount())<=0 && this.getFuelDiscount()==0){
+                currentPrice = BigDecimal.ZERO;
+            }
+            else if(this.getMoneyDiscount()!=null && this.getFuelDiscount()==0){
+                currentPrice = currentPrice.subtract(this.getMoneyDiscount());
+            }
+            currentFuelAmount = String.valueOf(i + 1);
+            currentPriceString = currentPrice.toString();
+            final String[] values = {currentPriceString, currentFuelAmount};
             Timer timer = new Timer();
             final int j = i;
 
@@ -116,9 +149,12 @@ public class FuelCharge extends Observable {
             };
             timer.schedule(task, 500 * (j + 1), 100);
         }
-        if (iterations < this.fuelAmount) {
+        if (iterations < (this.fuelAmount+this.getFuelDiscount())) {
             String currentPrice = this.moneyAmount.toString();
             String currentFuelAmount = String.valueOf(this.fuelAmount);
+            if(this.getMoneyDiscount()==null && this.getFuelDiscount()>0){
+                currentFuelAmount = String.valueOf(this.getFuelDiscount()+this.fuelAmount); 
+            }
             final String[] values = {currentPrice, currentFuelAmount};
             Timer timer = new Timer();
             task = new TimerTask() {

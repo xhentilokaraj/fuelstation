@@ -21,6 +21,7 @@ public class FuelChargeForm extends javax.swing.JFrame {
     private ArrayList<FuelPump> fuelPumps;
     private ArrayList<Customer> customers;
     private ArrayList<FuelCharge> fuelCharges;
+    ArrayList<DiscountStrategy>  discountStrategies;
     private PumpDisplay pumpDisplay;
 
     public ArrayList<FuelCharge> getFuelCharges() {
@@ -92,7 +93,8 @@ public class FuelChargeForm extends javax.swing.JFrame {
         customerName = new javax.swing.JLabel();
         customerSurname = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        discountType = new javax.swing.JComboBox<>();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -105,6 +107,11 @@ public class FuelChargeForm extends javax.swing.JFrame {
         jLabel4.setText("Fuel Amount");
 
         fuelPump.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        fuelPump.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                fuelPumpItemStateChanged(evt);
+            }
+        });
         fuelPump.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fuelPumpActionPerformed(evt);
@@ -143,7 +150,12 @@ public class FuelChargeForm extends javax.swing.JFrame {
 
         jLabel5.setText("Discount Type");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1" }));
+        jButton2.setText("Reset");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -153,8 +165,20 @@ public class FuelChargeForm extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(47, 47, 47)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(amountMoney, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
+                                        .addComponent(discountType, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jButton1)
+                                        .addGap(29, 29, 29)
+                                        .addComponent(jButton2)))
+                                .addGap(112, 112, 112))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -162,25 +186,18 @@ public class FuelChargeForm extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(fuelAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(fuelPump, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(47, 47, 47)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jButton1)
-                                    .addComponent(amountMoney, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
-                                    .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                        .addGap(155, 155, 155)
+                                    .addComponent(fuelPump, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(136, 136, 136)))
                         .addComponent(customerName, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(31, 31, 31)
                         .addComponent(customerSurname, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(75, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(189, 189, 189)
                     .addComponent(customerInput, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(604, Short.MAX_VALUE)))
+                    .addContainerGap(522, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -207,9 +224,11 @@ public class FuelChargeForm extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(discountType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(30, 30, 30)
-                .addComponent(jButton1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
                 .addGap(70, 70, 70))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
@@ -245,14 +264,18 @@ public class FuelChargeForm extends javax.swing.JFrame {
         }
         FuelPump fuelPump = (FuelPump) this.fuelPump.getSelectedItem();
         FuelCharge fuelCharge;
+
+        
+
+        DiscountStrategy freeFirstUnitsDiscount = (FreeFirstUnitsDiscount) this.discountType.getSelectedItem();
         if (this.amountMoney.getText().equals("") && this.fuelAmount.getText().equals("")) {
-            fuelCharge = new FuelCharge(fuelPump, 0, null, customer);
+            fuelCharge = new FuelCharge(fuelPump, 0, null, customer, freeFirstUnitsDiscount);
         } else if (this.amountMoney.getText().equals("")) {
-            fuelCharge = new FuelCharge(fuelPump, Float.valueOf(this.fuelAmount.getText()), null, customer);
+            fuelCharge = new FuelCharge(fuelPump, Float.valueOf(this.fuelAmount.getText()), null, customer, freeFirstUnitsDiscount);
         } else if (this.fuelAmount.getText().equals("")) {
-            fuelCharge = new FuelCharge(fuelPump, 0, new BigDecimal(this.amountMoney.getText()), customer);
+            fuelCharge = new FuelCharge(fuelPump, 0, new BigDecimal(this.amountMoney.getText()), customer, freeFirstUnitsDiscount);
         } else {
-            fuelCharge = new FuelCharge(fuelPump, Float.valueOf(this.fuelAmount.getText()), new BigDecimal(this.amountMoney.getText()), customer);
+            fuelCharge = new FuelCharge(fuelPump, Float.valueOf(this.fuelAmount.getText()), new BigDecimal(this.amountMoney.getText()), customer, freeFirstUnitsDiscount);
         }
         fuelCharge.addObserver(this.pumpDisplay);
         fuelPump.addObserver(this.pumpDisplay);
@@ -266,7 +289,8 @@ public class FuelChargeForm extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void fuelAmountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fuelAmountActionPerformed
-        // TODO add your handling code here:
+
+// TODO add your handling code here:
     }//GEN-LAST:event_fuelAmountActionPerformed
 
     private void fuelAmountFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_fuelAmountFocusLost
@@ -286,6 +310,22 @@ public class FuelChargeForm extends javax.swing.JFrame {
             this.fuelAmount.setEditable(true);
         }
     }//GEN-LAST:event_amountMoneyFocusLost
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void fuelPumpItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_fuelPumpItemStateChanged
+       
+        FuelPump fuelPump = (FuelPump) this.fuelPump.getSelectedItem();
+        this.discountStrategies = new ArrayList<DiscountStrategy>();
+        this.discountStrategies.add(new FreeFirstUnitsDiscount(BigDecimal.valueOf(5), 0, fuelPump.getFuelType().getFuelPrice()));
+        this.discountStrategies.add(new FreeFirstUnitsDiscount(BigDecimal.ZERO, 5, fuelPump.getFuelType().getFuelPrice()));
+        this.discountStrategies.add(new FixedAmtThresholdDiscount(BigDecimal.valueOf(15), BigDecimal.valueOf(5),
+                0, 0, fuelPump.getFuelType().getFuelPrice()));
+        this.discountType.setModel(new DefaultComboBoxModel(discountStrategies.toArray()));
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fuelPumpItemStateChanged
 
     /**
      * @param args the command line arguments
@@ -327,10 +367,11 @@ public class FuelChargeForm extends javax.swing.JFrame {
     private javax.swing.JTextField customerInput;
     private javax.swing.JLabel customerName;
     private javax.swing.JLabel customerSurname;
+    private javax.swing.JComboBox<String> discountType;
     private javax.swing.JTextField fuelAmount;
     private javax.swing.JComboBox<String> fuelPump;
     private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

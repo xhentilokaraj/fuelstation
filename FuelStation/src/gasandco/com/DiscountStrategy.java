@@ -16,5 +16,6 @@ public interface DiscountStrategy {
     float applyDiscountFuelAmt(BigDecimal moneyAmount);
 
     BigDecimal applyDiscountMoneyAmt(float fuelAmount);
+    
 
 }
