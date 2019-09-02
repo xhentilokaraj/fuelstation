@@ -17,8 +17,8 @@ public class Demo {
     public static void main(String[] args) {
         ArrayList<FuelType> fuelTypes = new ArrayList<FuelType>();
         fuelTypes.add(new FuelType("diesel 10ppm", BigDecimal.valueOf(1.5)));
-        fuelTypes.add(new FuelType("diesel unleaded", BigDecimal.valueOf(1.80)));
-        fuelTypes.add(new FuelType("gasoline", BigDecimal.valueOf(0.60)));
+        fuelTypes.add(new FuelType("diesel unleaded", BigDecimal.valueOf(2.5)));
+        fuelTypes.add(new FuelType("gasoline", BigDecimal.valueOf(0.50)));
 
         ArrayList<FuelPump> fuelpumps = new ArrayList<FuelPump>();
         fuelpumps.add(new FuelPump(1, fuelTypes.get(0), "liters", 3000));

@@ -62,7 +62,8 @@ public class FuelPump extends Observable {
 
     @Override
     public String toString() {
-        return this.getPumpId() + "- " + this.getFuelType().getFuelType();
+        return this.getPumpId() + "- " + this.getFuelType().getFuelType() + "---" + this.getFuelType().getFuelPrice() +
+                " Euros";
     }
 
 }

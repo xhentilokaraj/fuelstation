@@ -53,8 +53,8 @@ public class FixedAmtThresholdDiscount implements DiscountStrategy {
 
     @Override
     public String toString() {
-        return "Amount Threshold: " + this.fuelAmtThreshold + " Units --- " + this.moneyAmtThreshold + " Euros" +
-                " Discount: " + this.fuelAmtDiscount + " Units --- " + this.moneyAmtDiscount + " Euros";
+        return "Amount Threshold: " + this.fuelAmtThreshold + " Units --- " + this.moneyAmtThreshold + " Euros"
+                + "; Discount: " + this.fuelAmtDiscount + " Units --- " + this.moneyAmtDiscount + " Euros";
     }
 
     private void arrangeData() {
@@ -63,6 +63,13 @@ public class FixedAmtThresholdDiscount implements DiscountStrategy {
         } else if (this.fuelAmtThreshold > 0) {
             this.moneyAmtThreshold = new BigDecimal(Float.toString(this.fuelAmtThreshold)).multiply(this.price);
         }
+
+        if (this.moneyAmtDiscount != null && this.moneyAmtDiscount.compareTo(BigDecimal.ZERO) > 0) {
+            this.fuelAmtDiscount = this.moneyAmtDiscount.divide(this.price, 2, RoundingMode.HALF_EVEN).floatValue();
+        } else if (this.fuelAmtDiscount > 0) {
+            this.moneyAmtDiscount = new BigDecimal(Float.toString(this.fuelAmtDiscount)).multiply(this.price);
+        }
+
     }
 
 }
