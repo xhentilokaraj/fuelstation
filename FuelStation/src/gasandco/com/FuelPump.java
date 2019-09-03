@@ -60,10 +60,16 @@ public class FuelPump extends Observable {
         }
     }
 
+    public void reduceFuelAmount(float dispensedAmount) {
+        if (dispensedAmount >= 0 && (this.getTotalFuelAmt() - dispensedAmount) >= 0) {
+            this.setTotalFuelAmt(this.totalFuelAmt - dispensedAmount);
+        }
+    }
+
     @Override
     public String toString() {
-        return this.getPumpId() + "- " + this.getFuelType().getFuelType() + "---" + this.getFuelType().getFuelPrice() +
-                " Euros";
+        return this.getPumpId() + "- " + this.getFuelType().getFuelType() + "---" + this.getFuelType().getFuelPrice()
+                + " Euros";
     }
 
 }

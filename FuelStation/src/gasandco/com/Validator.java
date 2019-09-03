@@ -10,6 +10,6 @@ package gasandco.com;
  *
  * @author User
  */
-public class SystemController {
+public class Validator {
     
 }

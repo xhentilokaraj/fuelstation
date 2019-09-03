@@ -21,7 +21,7 @@ public class Demo {
         fuelTypes.add(new FuelType("gasoline", BigDecimal.valueOf(0.50)));
 
         ArrayList<FuelPump> fuelpumps = new ArrayList<FuelPump>();
-        fuelpumps.add(new FuelPump(1, fuelTypes.get(0), "liters", 3000));
+        fuelpumps.add(new FuelPump(1, fuelTypes.get(0), "liters", 0));
         fuelpumps.add(new FuelPump(2, fuelTypes.get(1), "gallons", 3000));
         fuelpumps.add(new FuelPump(3, fuelTypes.get(2), "liters", 3000));
 

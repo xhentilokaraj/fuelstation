@@ -14,11 +14,11 @@ import java.math.RoundingMode;
  */
 public class FixedAmtThresholdDiscount implements DiscountStrategy {
 
-    BigDecimal moneyAmtThreshold;
-    BigDecimal moneyAmtDiscount;
-    float fuelAmtThreshold;
-    float fuelAmtDiscount;
-    BigDecimal price;
+    private BigDecimal moneyAmtThreshold;
+    private BigDecimal moneyAmtDiscount;
+    private float fuelAmtThreshold;
+    private float fuelAmtDiscount;
+    private BigDecimal price;
 
     public FixedAmtThresholdDiscount(BigDecimal moneyAmtThreshold, BigDecimal moneyAmtDiscount, float fuelAmtThreshold, float fuelAmtDiscount, BigDecimal price) {
         this.moneyAmtThreshold = moneyAmtThreshold;
@@ -26,7 +26,7 @@ public class FixedAmtThresholdDiscount implements DiscountStrategy {
         this.fuelAmtThreshold = fuelAmtThreshold;
         this.fuelAmtDiscount = fuelAmtDiscount;
         this.price = price;
-        this.arrangeData();
+        this.preProcessData();
     }
 
     public float applyDiscountFuelAmt(BigDecimal moneyAmount) {
@@ -57,7 +57,7 @@ public class FixedAmtThresholdDiscount implements DiscountStrategy {
                 + "; Discount: " + this.fuelAmtDiscount + " Units --- " + this.moneyAmtDiscount + " Euros";
     }
 
-    private void arrangeData() {
+    private void preProcessData() {
         if (this.moneyAmtThreshold != null && this.moneyAmtThreshold.compareTo(BigDecimal.ZERO) > 0) {
             this.fuelAmtThreshold = this.moneyAmtThreshold.divide(this.price, 2, RoundingMode.HALF_EVEN).floatValue();
         } else if (this.fuelAmtThreshold > 0) {

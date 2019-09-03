@@ -26,9 +26,9 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jLabel3" alignment="0" min="-2" pref="126" max="-2" attributes="0"/>
-                  <Component id="jLabel2" alignment="0" min="-2" pref="153" max="-2" attributes="0"/>
-                  <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="amtEuroLabel" alignment="0" min="-2" pref="126" max="-2" attributes="0"/>
+                  <Component id="fuelAmtLabel" alignment="0" min="-2" pref="153" max="-2" attributes="0"/>
+                  <Component id="statusLabel" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -45,17 +45,17 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="63" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="statusLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="pumpStatus" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jLabel2" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
+                  <Component id="fuelAmtLabel" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
                   <Component id="fuelAmount" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="amtEuroLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="amountInEuro" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace pref="182" max="32767" attributes="0"/>
@@ -64,17 +64,17 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JLabel" name="jLabel1">
+    <Component class="javax.swing.JLabel" name="statusLabel">
       <Properties>
         <Property name="text" type="java.lang.String" value="Status"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="jLabel2">
+    <Component class="javax.swing.JLabel" name="fuelAmtLabel">
       <Properties>
         <Property name="text" type="java.lang.String" value="Fuel Amount"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="jLabel3">
+    <Component class="javax.swing.JLabel" name="amtEuroLabel">
       <Properties>
         <Property name="text" type="java.lang.String" value="Amount in Euro"/>
       </Properties>

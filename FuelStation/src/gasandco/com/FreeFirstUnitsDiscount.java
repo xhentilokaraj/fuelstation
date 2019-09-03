@@ -22,7 +22,7 @@ public class FreeFirstUnitsDiscount implements DiscountStrategy {
         this.freeFirstEuros = freeFirstEuros;
         this.freeFirstFuelUnits = freeFirstFuelUnits;
         this.price = price;
-        this.arrangeData();
+        this.preProcessData();
     }
 
     public float applyDiscountFuelAmt(BigDecimal moneyAmount) {
@@ -41,7 +41,7 @@ public class FreeFirstUnitsDiscount implements DiscountStrategy {
         }
     }
 
-    private void arrangeData() {
+    private void preProcessData() {
         if (this.freeFirstEuros != null && this.freeFirstEuros.compareTo(BigDecimal.ZERO) > 0) {
             this.freeFirstFuelUnits = this.freeFirstEuros.divide(this.price, 2, RoundingMode.HALF_EVEN).floatValue();
         } else if (this.freeFirstFuelUnits > 0) {
