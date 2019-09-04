@@ -34,6 +34,14 @@ public class FuelType {
     }
 
     public void setFuelPrice(BigDecimal fuelPrice) {
+        if(fuelPrice.compareTo(BigDecimal.ZERO) > 0)
         this.fuelPrice = fuelPrice;
     }
+
+    @Override
+    public String toString() {
+        return this.fuelType; //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    
 }

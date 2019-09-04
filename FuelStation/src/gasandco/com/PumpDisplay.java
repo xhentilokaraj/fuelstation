@@ -132,7 +132,6 @@ public class PumpDisplay extends javax.swing.JFrame implements Observer {
 //            }
 //        });
 //    }
-    
     @Override
     public void update(Observable o, Object fuelAmtInput) {
         if (fuelAmtInput instanceof String) {

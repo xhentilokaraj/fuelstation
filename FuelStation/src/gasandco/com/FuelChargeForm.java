@@ -23,7 +23,9 @@ public class FuelChargeForm extends javax.swing.JFrame {
     private ArrayList<Customer> customers;
     private ArrayList<FuelCharge> fuelCharges;
     private ArrayList<DiscountStrategy> discountStrategies;
+    private ArrayList<FuelType> fuelTypes;
     private PumpDisplay pumpDisplay;
+    private Validator validator;
 
     public ArrayList<FuelCharge> getFuelCharges() {
         return fuelCharges;
@@ -33,13 +35,28 @@ public class FuelChargeForm extends javax.swing.JFrame {
         this.fuelCharges = fuelCharges;
     }
 
-    public FuelChargeForm(ArrayList<FuelPump> fuelPumps, ArrayList<Customer> customers, ArrayList<FuelCharge> fuelCharges, PumpDisplay pumpDisplay) throws HeadlessException {
+    public ArrayList<FuelType> getFuelTypes() {
+        return fuelTypes;
+    }
+
+    public void setFuelTypes(ArrayList<FuelType> fuelTypes) {
+        this.fuelTypes = fuelTypes;
+    }
+
+    public FuelChargeForm(ArrayList<FuelPump> fuelPumps, ArrayList<Customer> customers, ArrayList<FuelCharge> fuelCharges, PumpDisplay pumpDisplay, ArrayList<FuelType> fuelTypes) throws HeadlessException {
         this.fuelPumps = fuelPumps;
         this.pumpDisplay = pumpDisplay;
         this.customers = customers;
         this.fuelCharges = fuelCharges;
+        this.fuelTypes = fuelTypes;
         initComponents();
+
         this.fuelPump.setModel(new DefaultComboBoxModel(fuelPumps.toArray()));
+        this.fuelPumpRefill.setModel(new DefaultComboBoxModel(fuelPumps.toArray()));
+        //this.fuelPump.addItem("Select Fuel Pump");
+        //this.fuelPump.setSelectedIndex(this.getFuelPumps().size());
+        this.fuelType.setModel(new DefaultComboBoxModel(fuelTypes.toArray()));
+
     }
 
     public PumpDisplay getPumpDisplay() {
@@ -99,12 +116,20 @@ public class FuelChargeForm extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        fuelType = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        currFuelPrice = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        newFuelPrice = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        fuelPumpLbl1 = new javax.swing.JLabel();
+        fuelPumpRefill = new javax.swing.JComboBox<>();
+        fuelPumpLbl2 = new javax.swing.JLabel();
+        refillAmount = new javax.swing.JTextField();
+        jButton2 = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
+        availableAmount = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -156,7 +181,7 @@ public class FuelChargeForm extends javax.swing.JFrame {
             }
         });
 
-        submitBtn.setText("submit");
+        submitBtn.setText("Submit");
         submitBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 submitBtnActionPerformed(evt);
@@ -164,6 +189,12 @@ public class FuelChargeForm extends javax.swing.JFrame {
         });
 
         discountTypeLbl.setText("Discount Type");
+
+        discountType.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                discountTypeActionPerformed(evt);
+            }
+        });
 
         resetBtn.setText("Reset");
         resetBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -180,17 +211,27 @@ public class FuelChargeForm extends javax.swing.JFrame {
 
         jLabel3.setText("Select Fuel Type");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        fuelType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        fuelType.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                fuelTypeFocusGained(evt);
+            }
+        });
+        fuelType.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fuelTypeActionPerformed(evt);
+            }
+        });
 
         jLabel4.setText("Current Price");
 
-        jTextField1.setEditable(false);
+        currFuelPrice.setEditable(false);
 
         jLabel5.setText("New Price");
 
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+        newFuelPrice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
+                newFuelPriceActionPerformed(evt);
             }
         });
 
@@ -201,68 +242,123 @@ public class FuelChargeForm extends javax.swing.JFrame {
             }
         });
 
+        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel6.setText("Refill");
+
+        fuelPumpLbl1.setText("Amount to Refill");
+
+        fuelPumpRefill.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        fuelPumpRefill.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                fuelPumpRefillItemStateChanged(evt);
+            }
+        });
+        fuelPumpRefill.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fuelPumpRefillActionPerformed(evt);
+            }
+        });
+
+        fuelPumpLbl2.setText("Fuel Pump");
+
+        refillAmount.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                refillAmountActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("Save");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jLabel7.setText("Available Amount");
+
+        availableAmount.setEditable(false);
+        availableAmount.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                availableAmountActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(customerLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(0, 0, Short.MAX_VALUE))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addComponent(fuelPumpLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(fuelPump, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addComponent(fuelAmtLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(jLabel3)
-                                                .addComponent(jLabel4)
-                                                .addComponent(jLabel5))
-                                            .addGap(72, 72, 72)
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                                    .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
-                                    .addGap(110, 110, 110))))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(472, 472, 472)
-                            .addComponent(customerName, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(251, 251, 251)
-                            .addComponent(customerSurname, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(moneyAmtLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(discountTypeLbl))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(discountType, javax.swing.GroupLayout.PREFERRED_SIZE, 362, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(amountMoney, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(customerLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(resetBtn)
-                                .addGap(31, 31, 31)
-                                .addComponent(submitBtn))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(fuelPumpLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(fuelAmtLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(129, 129, 129)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(resetBtn)
+                                                .addGap(32, 32, 32)
+                                                .addComponent(submitBtn))
+                                            .addComponent(discountType, javax.swing.GroupLayout.PREFERRED_SIZE, 369, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGap(54, 54, 54)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel3)
+                                            .addComponent(jLabel4)
+                                            .addComponent(jLabel5))
+                                        .addGap(72, 72, 72)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(fuelType, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(currFuelPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(newFuelPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jButton1)))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(fuelPumpLbl2, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel7)
+                                            .addComponent(fuelPumpLbl1, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(88, 88, 88)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(fuelPumpRefill, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jButton2)
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                                .addComponent(availableAmount, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
+                                                .addComponent(refillAmount, javax.swing.GroupLayout.Alignment.LEADING))))
+                                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(472, 472, 472)
+                        .addComponent(customerName, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(251, 251, 251)
+                        .addComponent(customerSurname, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(69, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(moneyAmtLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(discountTypeLbl))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(amountMoney, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(fuelPump, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(fuelAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(customerInput, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(customerInput, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(42, 42, 42)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(801, Short.MAX_VALUE)))
+                    .addContainerGap(855, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -278,11 +374,11 @@ public class FuelChargeForm extends javax.swing.JFrame {
                     .addComponent(fuelPumpLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(fuelPump, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(fuelType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(currFuelPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(2, 2, 2)
@@ -303,16 +399,35 @@ public class FuelChargeForm extends javax.swing.JFrame {
                         .addGap(36, 36, 36)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(42, 42, 42)
+                            .addComponent(newFuelPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(26, 26, 26)
                         .addComponent(jButton1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(discountType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(discountType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6))))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(fuelPumpRefill, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(fuelPumpLbl2, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(15, 15, 15)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel7)
+                            .addComponent(availableAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(39, 39, 39)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(resetBtn)
+                            .addComponent(submitBtn))))
+                .addGap(19, 19, 19)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(resetBtn)
-                    .addComponent(submitBtn))
-                .addContainerGap(186, Short.MAX_VALUE))
+                    .addComponent(fuelPumpLbl1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(refillAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addComponent(jButton2)
+                .addGap(49, 49, 49))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(26, 26, 26)
@@ -338,45 +453,70 @@ public class FuelChargeForm extends javax.swing.JFrame {
         if (!this.customerInput.getText().equals("")) {
             customerId = Integer.valueOf(this.customerInput.getText());
         }
+
         Customer customer = Helper.getCustomerById(customers, customerId);
-        if (customer != null) {
-            this.customerName.setText(customer.getFirstname());
-            this.customerSurname.setText(customer.getLastname());
-        } else {
-            this.customerName.setText("Anonymous");
-        }
+//        if (customer != null) {
+//            this.customerName.setText(customer.getFirstname());
+//            this.customerSurname.setText(customer.getLastname());
+//        } else {
+//            this.customerName.setText("Anonymous");
+//        }
 
         FuelPump fuelPump = (FuelPump) this.fuelPump.getSelectedItem();
 
-        if (fuelPump.getTotalFuelAmt() > 0) {
-            FuelCharge fuelCharge;
+        FuelCharge fuelCharge;
 
-            DiscountStrategy selectedDiscountStrategy = (DiscountStrategy) this.discountType.getSelectedItem();
+        DiscountStrategy selectedDiscountStrategy;
 
-            if (this.amountMoney.getText().equals("") && this.fuelAmount.getText().equals("")) {
-                fuelCharge = new FuelCharge(fuelPump, 0, null, customer, selectedDiscountStrategy);
-            } else if (this.amountMoney.getText().equals("")) {
-                fuelCharge = new FuelCharge(fuelPump, Float.valueOf(this.fuelAmount.getText()), null, customer, selectedDiscountStrategy);
-            } else if (this.fuelAmount.getText().equals("")) {
-                fuelCharge = new FuelCharge(fuelPump, 0, new BigDecimal(this.amountMoney.getText()), customer, selectedDiscountStrategy);
-            } else {
-                fuelCharge = new FuelCharge(fuelPump, Float.valueOf(this.fuelAmount.getText()), new BigDecimal(this.amountMoney.getText()), customer, selectedDiscountStrategy);
-            }
-
-            fuelCharge.addObserver(this.pumpDisplay);
-            fuelPump.addObserver(this.pumpDisplay);
-
-            fuelCharges.add(fuelCharge);
-
-            try {
-                fuelCharge.chargeInProgress();
-            } catch (InterruptedException ex) {
-                Logger.getLogger(FuelChargeForm.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            System.out.println(fuelCharge);
+        if (customer != null) {
+            selectedDiscountStrategy = (DiscountStrategy) this.discountType.getSelectedItem();
         } else {
-            JOptionPane.showMessageDialog(null, "There is no sufficient fuel left in the pump.");
+            selectedDiscountStrategy = null;
         }
+
+        if (this.amountMoney.getText().equals("") && this.fuelAmount.getText().equals("")) {
+            fuelCharge = new FuelCharge(fuelPump, 0, null, customer, selectedDiscountStrategy);
+        } else if (this.amountMoney.getText().equals("")) {
+            fuelCharge = new FuelCharge(fuelPump, Float.valueOf(this.fuelAmount.getText()), null, customer, selectedDiscountStrategy);
+            if ((fuelPump.getTotalFuelAmt() - fuelCharge.getFuelAmount()) < 0) {
+                JOptionPane.showMessageDialog(null, "There is no sufficient fuel left in the pump.");
+                return;
+            }
+        } else if (this.fuelAmount.getText().equals("")) {
+            fuelCharge = new FuelCharge(fuelPump, 0, new BigDecimal(this.amountMoney.getText()), customer, selectedDiscountStrategy);
+            float normalizedFuelAmt = fuelCharge.getFuelAmount() + fuelCharge.getFuelDiscount();
+            if ((fuelPump.getTotalFuelAmt() - normalizedFuelAmt) < 0) {
+                JOptionPane.showMessageDialog(null, "There is no sufficient fuel left in the pump.");
+                return;
+            }
+        } else {
+            fuelCharge = new FuelCharge(fuelPump, Float.valueOf(this.fuelAmount.getText()), new BigDecimal(this.amountMoney.getText()), customer, selectedDiscountStrategy);
+        }
+
+        this.fuelPump.setEditable(false);
+        this.customerInput.setEditable(false);
+        this.amountMoney.setEditable(false);
+        this.fuelAmount.setEditable(false);
+        this.discountType.setEditable(false);
+
+        fuelCharge.addObserver(this.pumpDisplay);
+        fuelPump.addObserver(this.pumpDisplay);
+
+        fuelCharges.add(fuelCharge);
+
+        try {
+
+            fuelCharge.chargeInProgress();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(FuelChargeForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        this.fuelPump.setEditable(true);
+        this.customerInput.setEditable(true);
+        this.amountMoney.setEditable(true);
+        this.fuelAmount.setEditable(true);
+        this.discountType.setEditable(true);
+
     }//GEN-LAST:event_submitBtnActionPerformed
 
     private void fuelAmountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fuelAmountActionPerformed
@@ -419,22 +559,76 @@ public class FuelChargeForm extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        if (Float.valueOf(this.newFuelPrice.getText()) > 0) {
+            FuelType fuelType = Helper.getFuelTypeByFuel(fuelTypes, this.fuelType.getSelectedItem().toString());
+            fuelType.setFuelPrice(new BigDecimal(this.newFuelPrice.getText()));
+            JOptionPane.showMessageDialog(null, "Fuel Price changed successfully.");
+        }
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+    private void newFuelPriceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newFuelPriceActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
+    }//GEN-LAST:event_newFuelPriceActionPerformed
 
     private void customerInputFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_customerInputFocusLost
-        Customer customer = Helper.getCustomerById(customers, Integer.valueOf(this.customerInput.getText()));
-        if (customer == null) {
-            this.discountType.setSelectedIndex(-1);
-            this.discountType.setVisible(false);
-            System.out.println("Selected Discount is " + this.discountType.toString());
+        if (this.customerInput.getText() != "") {
+            Customer customer = Helper.getCustomerById(customers, Integer.valueOf(this.customerInput.getText()));
+            if (customer == null) {
+                //this.discountType.setSelectedIndex(-1);
+                this.discountType.setVisible(false);
+                System.out.println("Selected Discount is " + this.discountType.toString());
+            } else {
+                this.discountType.setVisible(true);
+            }
+        }
 
 // TODO add your handling  here:
     }//GEN-LAST:event_customerInputFocusLost
-    }
+
+
+    private void fuelTypeFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_fuelTypeFocusGained
+
+    }//GEN-LAST:event_fuelTypeFocusGained
+
+    private void fuelTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fuelTypeActionPerformed
+        // TODO add your handling code here:
+        FuelType fuelType = Helper.getFuelTypeByFuel(fuelTypes, this.fuelType.getSelectedItem().toString());
+        this.currFuelPrice.setText(fuelType.getFuelPrice().toEngineeringString());
+    }//GEN-LAST:event_fuelTypeActionPerformed
+
+    private void discountTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_discountTypeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_discountTypeActionPerformed
+
+    private void fuelPumpRefillItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_fuelPumpRefillItemStateChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fuelPumpRefillItemStateChanged
+
+    private void fuelPumpRefillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fuelPumpRefillActionPerformed
+        FuelPump fuelPump = Helper.getFuelPumpByName(fuelPumps, this.fuelPumpRefill.getSelectedItem().toString());
+        this.availableAmount.setText(Float.toString(fuelPump.getTotalFuelAmt()));        // TODO add your handling code here:
+    }//GEN-LAST:event_fuelPumpRefillActionPerformed
+
+    private void refillAmountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refillAmountActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_refillAmountActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        if (Validator.numberInputValidator(this.refillAmount.getText())) {
+            FuelPump fuelPump = Helper.getFuelPumpByName(fuelPumps, this.fuelPumpRefill.getSelectedItem().toString());
+            System.out.println(fuelPump);
+            fuelPump.setTotalFuelAmt(fuelPump.getTotalFuelAmt() + Float.valueOf(this.refillAmount.getText()));
+            JOptionPane.showMessageDialog(null, "Pump refuelled successfully.");
+        } else {
+            JOptionPane.showMessageDialog(null, "Please input a valid amount.");
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void availableAmountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_availableAmountActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_availableAmountActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -472,6 +666,8 @@ public class FuelChargeForm extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField amountMoney;
+    private javax.swing.JTextField availableAmount;
+    private javax.swing.JTextField currFuelPrice;
     private javax.swing.JTextField customerInput;
     private javax.swing.JLabel customerLbl;
     private javax.swing.JLabel customerName;
@@ -482,16 +678,22 @@ public class FuelChargeForm extends javax.swing.JFrame {
     private javax.swing.JLabel fuelAmtLbl;
     private javax.swing.JComboBox<String> fuelPump;
     private javax.swing.JLabel fuelPumpLbl;
+    private javax.swing.JLabel fuelPumpLbl1;
+    private javax.swing.JLabel fuelPumpLbl2;
+    private javax.swing.JComboBox<String> fuelPumpRefill;
+    private javax.swing.JComboBox<String> fuelType;
     private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel moneyAmtLbl;
+    private javax.swing.JTextField newFuelPrice;
+    private javax.swing.JTextField refillAmount;
     private javax.swing.JButton resetBtn;
     private javax.swing.JButton submitBtn;
     // End of variables declaration//GEN-END:variables
