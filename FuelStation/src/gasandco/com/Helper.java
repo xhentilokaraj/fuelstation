@@ -35,7 +35,7 @@ public class Helper {
         }
         return null;
     }
-
+    
     public static FuelPump getFuelPumpByName(ArrayList<FuelPump> fuelPumps, String fuelPumpName) {
         Iterator<FuelPump> iter = fuelPumps.iterator();
         while (iter.hasNext()) {

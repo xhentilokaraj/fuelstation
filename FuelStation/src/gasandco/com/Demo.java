@@ -33,7 +33,6 @@ public class Demo {
 
         ArrayList<FuelCharge> fuelcharges = new ArrayList<FuelCharge>();
 
-        //System.out.println(fuelpumps.get(0).toString());
         PumpDisplay pumpDisplay = new PumpDisplay();
         FuelChargeForm fuelForm = new FuelChargeForm(fuelpumps, customers, fuelcharges, pumpDisplay, fuelTypes);
         fuelForm.setVisible(true);

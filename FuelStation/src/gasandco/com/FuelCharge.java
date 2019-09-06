@@ -36,8 +36,7 @@ public class FuelCharge extends Observable {
         this.fuelAmount = fuelAmount;
         this.moneyAmount = moneyAmount;
         this.customer = customer;
-        System.out.println(this.moneyAmount);
-        System.out.println("Charge id is: " + this.chargeId);
+
 
         if (this.fuelAmount != 0) {
             calculateMoneyAmount(discountStrategy);
@@ -107,13 +106,9 @@ public class FuelCharge extends Observable {
     public void chargeInProgress() throws InterruptedException {
         fuelPump.setStatus("Dispensing");
         BigDecimal price = this.fuelPump.getFuelType().getFuelPrice();
-        System.out.println(this.fuelAmount);
         int iterations = Math.round(this.fuelAmount);
 
-//        System.out.println("=========================");
-//        System.out.println(this.getMoneyDiscount());
-//        System.out.println("=========================");
-//        System.out.println(this.getFuelDiscount());
+
         final boolean isInteger = (iterations - this.fuelAmount == 0);
         if (this.getMoneyDiscount() == null && this.getFuelDiscount() > 0) {
             iterations = Math.round(this.getFuelDiscount() + this.fuelAmount);

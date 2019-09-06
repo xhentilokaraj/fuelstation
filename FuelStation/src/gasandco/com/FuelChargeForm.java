@@ -439,7 +439,13 @@ public class FuelChargeForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void fuelPumpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fuelPumpActionPerformed
-        // TODO add your handling code here:
+        FuelPump fuelPump = (FuelPump) this.fuelPump.getSelectedItem();
+        this.discountStrategies = new ArrayList<DiscountStrategy>();
+        this.discountStrategies.add(new FreeFirstUnitsDiscount(BigDecimal.valueOf(5), 0, fuelPump.getFuelType().getFuelPrice()));
+        this.discountStrategies.add(new FreeFirstUnitsDiscount(BigDecimal.ZERO, 5, fuelPump.getFuelType().getFuelPrice()));
+        this.discountStrategies.add(new FixedAmtThresholdDiscount(BigDecimal.valueOf(15), BigDecimal.valueOf(5),
+                0, 0, fuelPump.getFuelType().getFuelPrice()));
+        this.discountType.setModel(new DefaultComboBoxModel(discountStrategies.toArray()));        // TODO add your handling code here:
     }//GEN-LAST:event_fuelPumpActionPerformed
 
     private void customerInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_customerInputActionPerformed
@@ -455,12 +461,6 @@ public class FuelChargeForm extends javax.swing.JFrame {
         }
 
         Customer customer = Helper.getCustomerById(customers, customerId);
-//        if (customer != null) {
-//            this.customerName.setText(customer.getFirstname());
-//            this.customerSurname.setText(customer.getLastname());
-//        } else {
-//            this.customerName.setText("Anonymous");
-//        }
 
         FuelPump fuelPump = (FuelPump) this.fuelPump.getSelectedItem();
 
@@ -505,12 +505,16 @@ public class FuelChargeForm extends javax.swing.JFrame {
         fuelCharges.add(fuelCharge);
 
         try {
-
+            this.submitBtn.setEnabled(false);
+            this.resetBtn.setEnabled(false);
             fuelCharge.chargeInProgress();
+
         } catch (InterruptedException ex) {
             Logger.getLogger(FuelChargeForm.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+        this.submitBtn.setEnabled(true);
+        this.resetBtn.setEnabled(false);
         this.fuelPump.setEditable(true);
         this.customerInput.setEditable(true);
         this.amountMoney.setEditable(true);
@@ -543,18 +547,15 @@ public class FuelChargeForm extends javax.swing.JFrame {
     }//GEN-LAST:event_amountMoneyFocusLost
 
     private void resetBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetBtnActionPerformed
+        this.customerInput.setText("");
+        this.fuelAmount.setText("");
+        this.amountMoney.setText("");
         // TODO add your handling code here:
     }//GEN-LAST:event_resetBtnActionPerformed
 
     private void fuelPumpItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_fuelPumpItemStateChanged
 
-        FuelPump fuelPump = (FuelPump) this.fuelPump.getSelectedItem();
-        this.discountStrategies = new ArrayList<DiscountStrategy>();
-        this.discountStrategies.add(new FreeFirstUnitsDiscount(BigDecimal.valueOf(5), 0, fuelPump.getFuelType().getFuelPrice()));
-        this.discountStrategies.add(new FreeFirstUnitsDiscount(BigDecimal.ZERO, 5, fuelPump.getFuelType().getFuelPrice()));
-        this.discountStrategies.add(new FixedAmtThresholdDiscount(BigDecimal.valueOf(15), BigDecimal.valueOf(5),
-                0, 0, fuelPump.getFuelType().getFuelPrice()));
-        this.discountType.setModel(new DefaultComboBoxModel(discountStrategies.toArray()));
+
     }//GEN-LAST:event_fuelPumpItemStateChanged
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -575,9 +576,7 @@ public class FuelChargeForm extends javax.swing.JFrame {
         if (this.customerInput.getText() != "") {
             Customer customer = Helper.getCustomerById(customers, Integer.valueOf(this.customerInput.getText()));
             if (customer == null) {
-                //this.discountType.setSelectedIndex(-1);
                 this.discountType.setVisible(false);
-                System.out.println("Selected Discount is " + this.discountType.toString());
             } else {
                 this.discountType.setVisible(true);
             }
@@ -617,7 +616,6 @@ public class FuelChargeForm extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         if (Validator.numberInputValidator(this.refillAmount.getText())) {
             FuelPump fuelPump = Helper.getFuelPumpByName(fuelPumps, this.fuelPumpRefill.getSelectedItem().toString());
-            System.out.println(fuelPump);
             fuelPump.setTotalFuelAmt(fuelPump.getTotalFuelAmt() + Float.valueOf(this.refillAmount.getText()));
             JOptionPane.showMessageDialog(null, "Pump refuelled successfully.");
         } else {
