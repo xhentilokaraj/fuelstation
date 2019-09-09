@@ -5,18 +5,27 @@ package gasandco.com;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author User
  */
 public class Validator {
-    
+
     public static boolean numberInputValidator(String input) {
-        if (input.equals(""))
+        if (input.equals("")) {
             return false;
-        if (!input.matches("[0-9]+"))
+        }
+        if (!input.matches("^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$")) {
             return false;
+        }
         return true;
+    }
+
+    public static boolean textInputValidator(String input) {
+        if (input.equals("")) {
+            return false;
+        }
+        return true;
+
     }
 }

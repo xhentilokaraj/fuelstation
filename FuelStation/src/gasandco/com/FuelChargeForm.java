@@ -7,7 +7,10 @@ package gasandco.com;
 
 import java.awt.HeadlessException;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
@@ -17,7 +20,7 @@ import javax.swing.JOptionPane;
  *
  * @author User
  */
-public class FuelChargeForm extends javax.swing.JFrame {
+public class FuelChargeForm extends javax.swing.JFrame implements Observer {
 
     private ArrayList<FuelPump> fuelPumps;
     private ArrayList<Customer> customers;
@@ -25,7 +28,6 @@ public class FuelChargeForm extends javax.swing.JFrame {
     private ArrayList<DiscountStrategy> discountStrategies;
     private ArrayList<FuelType> fuelTypes;
     private PumpDisplay pumpDisplay;
-    private Validator validator;
 
     public ArrayList<FuelCharge> getFuelCharges() {
         return fuelCharges;
@@ -130,6 +132,7 @@ public class FuelChargeForm extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
         availableAmount = new javax.swing.JTextField();
+        fuelUnit = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -351,9 +354,12 @@ public class FuelChargeForm extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(fuelPump, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(fuelAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(fuelAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(fuelUnit, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(customerInput, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addGap(0, 773, Short.MAX_VALUE))))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(42, 42, 42)
@@ -388,7 +394,8 @@ public class FuelChargeForm extends javax.swing.JFrame {
                         .addGap(27, 27, 27)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(fuelAmtLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(fuelAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(fuelAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(fuelUnit))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(moneyAmtLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -452,76 +459,98 @@ public class FuelChargeForm extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_customerInputActionPerformed
 
+    private boolean checkFuelFormInput() {
+        if (this.fuelAmount.getText().equals("") && (this.amountMoney.getText().equals(""))) {
+            return false;
+        }
+        return true;
+    }
+
     private void submitBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitBtnActionPerformed
-        // TODO add your handling code here:
 
-        int customerId = 0;
-        if (!this.customerInput.getText().equals("")) {
-            customerId = Integer.valueOf(this.customerInput.getText());
-        }
+        if (checkFuelFormInput() == true) {
 
-        Customer customer = Helper.getCustomerById(customers, customerId);
-
-        FuelPump fuelPump = (FuelPump) this.fuelPump.getSelectedItem();
-
-        FuelCharge fuelCharge;
-
-        DiscountStrategy selectedDiscountStrategy;
-
-        if (customer != null) {
-            selectedDiscountStrategy = (DiscountStrategy) this.discountType.getSelectedItem();
-        } else {
-            selectedDiscountStrategy = null;
-        }
-
-        if (this.amountMoney.getText().equals("") && this.fuelAmount.getText().equals("")) {
-            fuelCharge = new FuelCharge(fuelPump, 0, null, customer, selectedDiscountStrategy);
-        } else if (this.amountMoney.getText().equals("")) {
-            fuelCharge = new FuelCharge(fuelPump, Float.valueOf(this.fuelAmount.getText()), null, customer, selectedDiscountStrategy);
-            if ((fuelPump.getTotalFuelAmt() - fuelCharge.getFuelAmount()) < 0) {
-                JOptionPane.showMessageDialog(null, "There is no sufficient fuel left in the pump.");
-                return;
+            int customerId = 0;
+            if (!this.customerInput.getText().equals("")) {
+                customerId = Integer.valueOf(this.customerInput.getText());
             }
-        } else if (this.fuelAmount.getText().equals("")) {
-            fuelCharge = new FuelCharge(fuelPump, 0, new BigDecimal(this.amountMoney.getText()), customer, selectedDiscountStrategy);
-            float normalizedFuelAmt = fuelCharge.getFuelAmount() + fuelCharge.getFuelDiscount();
-            if ((fuelPump.getTotalFuelAmt() - normalizedFuelAmt) < 0) {
-                JOptionPane.showMessageDialog(null, "There is no sufficient fuel left in the pump.");
-                return;
+
+            Customer customer = Helper.getCustomerById(customers, customerId);
+
+            FuelPump fuelPump = (FuelPump) this.fuelPump.getSelectedItem();
+
+            FuelCharge fuelCharge;
+
+            DiscountStrategy selectedDiscountStrategy;
+
+            if (customer != null) {
+                selectedDiscountStrategy = (DiscountStrategy) this.discountType.getSelectedItem();
+            } else {
+                selectedDiscountStrategy = null;
+            }
+
+            if (this.amountMoney.getText().equals("") && this.fuelAmount.getText().equals("")) {
+                fuelCharge = new FuelCharge(fuelPump, 0, null, customer, selectedDiscountStrategy);
+            } else if (this.amountMoney.getText().equals("")) {
+                fuelCharge = new FuelCharge(fuelPump, Float.valueOf(this.fuelAmount.getText()), null, customer, selectedDiscountStrategy);
+                if ((fuelPump.getTotalFuelAmt() - fuelCharge.getFuelAmount()) < 0) {
+                    JOptionPane.showMessageDialog(null, "There is no sufficient fuel left in the pump.");
+                    return;
+                }
+            } else if (this.fuelAmount.getText().equals("")) {
+                fuelCharge = new FuelCharge(fuelPump, 0, new BigDecimal(this.amountMoney.getText()), customer, selectedDiscountStrategy);
+                float normalizedFuelAmt = fuelCharge.getFuelAmount() + fuelCharge.getFuelDiscount();
+                if ((fuelPump.getTotalFuelAmt() - normalizedFuelAmt) < 0) {
+                    JOptionPane.showMessageDialog(null, "There is no sufficient fuel left in the pump.");
+                    return;
+                }
+            } else {
+                fuelCharge = new FuelCharge(fuelPump, Float.valueOf(this.fuelAmount.getText()), new BigDecimal(this.amountMoney.getText()), customer, selectedDiscountStrategy);
+            }
+
+            fuelCharge.addObserver(this.pumpDisplay);
+
+            fuelPump.addObserver(this.pumpDisplay);
+            fuelPump.addObserver(this);
+
+            fuelCharges.add(fuelCharge);
+
+            try {
+                fuelCharge.chargeInProgress();
+                this.submitBtn.setEnabled(false);
+                this.resetBtn.setEnabled(false);
+                this.fuelPump.setEnabled(false);
+                this.customerInput.setEditable(false);
+                this.amountMoney.setEditable(false);
+                this.fuelAmount.setEditable(false);
+                this.discountType.setEditable(false);
+
+            } catch (InterruptedException ex) {
+                Logger.getLogger(FuelChargeForm.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            fuelCharge = new FuelCharge(fuelPump, Float.valueOf(this.fuelAmount.getText()), new BigDecimal(this.amountMoney.getText()), customer, selectedDiscountStrategy);
+            JOptionPane.showMessageDialog(null, "Please input either the fuel amount or the amount in euro.");
         }
-
-        this.fuelPump.setEditable(false);
-        this.customerInput.setEditable(false);
-        this.amountMoney.setEditable(false);
-        this.fuelAmount.setEditable(false);
-        this.discountType.setEditable(false);
-
-        fuelCharge.addObserver(this.pumpDisplay);
-        fuelPump.addObserver(this.pumpDisplay);
-
-        fuelCharges.add(fuelCharge);
-
-        try {
-            this.submitBtn.setEnabled(false);
-            this.resetBtn.setEnabled(false);
-            fuelCharge.chargeInProgress();
-
-        } catch (InterruptedException ex) {
-            Logger.getLogger(FuelChargeForm.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        this.submitBtn.setEnabled(true);
-        this.resetBtn.setEnabled(false);
-        this.fuelPump.setEditable(true);
-        this.customerInput.setEditable(true);
-        this.amountMoney.setEditable(true);
-        this.fuelAmount.setEditable(true);
-        this.discountType.setEditable(true);
 
     }//GEN-LAST:event_submitBtnActionPerformed
+
+    @Override
+    public void update(Observable o, Object fuelAmtInput) {
+        if (fuelAmtInput instanceof String) {
+            String status = (String) fuelAmtInput;
+            if (status.equals("Free")) {
+
+                this.submitBtn.setEnabled(true);
+                this.resetBtn.setEnabled(true);
+                this.fuelPump.setEnabled(true);
+                this.customerInput.setEditable(true);
+                this.amountMoney.setEditable(true);
+                this.fuelAmount.setEditable(true);
+                this.discountType.setEditable(true);
+            }
+        }
+    }
+
 
     private void fuelAmountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fuelAmountActionPerformed
 
@@ -558,13 +587,24 @@ public class FuelChargeForm extends javax.swing.JFrame {
 
     }//GEN-LAST:event_fuelPumpItemStateChanged
 
+    private boolean checkPriceFormInput() {
+        if(!Validator.numberInputValidator(this.newFuelPrice.getText()))
+            return false;
+        return true;
+    }
+    
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        
+        if(checkPriceFormInput() == true) {
         if (Float.valueOf(this.newFuelPrice.getText()) > 0) {
             FuelType fuelType = Helper.getFuelTypeByFuel(fuelTypes, this.fuelType.getSelectedItem().toString());
             fuelType.setFuelPrice(new BigDecimal(this.newFuelPrice.getText()));
             JOptionPane.showMessageDialog(null, "Fuel Price changed successfully.");
         }
+        }
+        else
+            JOptionPane.showMessageDialog(null, "Please input a valid fuel price.");
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -573,12 +613,17 @@ public class FuelChargeForm extends javax.swing.JFrame {
     }//GEN-LAST:event_newFuelPriceActionPerformed
 
     private void customerInputFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_customerInputFocusLost
-        if (this.customerInput.getText() != "") {
-            Customer customer = Helper.getCustomerById(customers, Integer.valueOf(this.customerInput.getText()));
-            if (customer == null) {
-                this.discountType.setVisible(false);
-            } else {
-                this.discountType.setVisible(true);
+        System.out.println(this.customerInput.getText());
+        if (!this.customerInput.getText().equals("")) {
+            try {
+                Customer customer = Helper.getCustomerById(customers, Integer.valueOf(this.customerInput.getText()));
+                if (customer == null) {
+                    this.discountType.setVisible(false);
+                } else {
+                    this.discountType.setVisible(true);
+                }
+            } catch (java.lang.NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Please input a valid Customer ID.");
             }
         }
 
@@ -680,6 +725,7 @@ public class FuelChargeForm extends javax.swing.JFrame {
     private javax.swing.JLabel fuelPumpLbl2;
     private javax.swing.JComboBox<String> fuelPumpRefill;
     private javax.swing.JComboBox<String> fuelType;
+    private javax.swing.JLabel fuelUnit;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
