@@ -55,9 +55,9 @@ public class FuelChargeForm extends javax.swing.JFrame implements Observer {
 
         this.fuelPump.setModel(new DefaultComboBoxModel(fuelPumps.toArray()));
         this.fuelPumpRefill.setModel(new DefaultComboBoxModel(fuelPumps.toArray()));
-        //this.fuelPump.addItem("Select Fuel Pump");
-        //this.fuelPump.setSelectedIndex(this.getFuelPumps().size());
+
         this.fuelType.setModel(new DefaultComboBoxModel(fuelTypes.toArray()));
+        this.discountType.setVisible(false);
 
     }
 
@@ -539,13 +539,15 @@ public class FuelChargeForm extends javax.swing.JFrame implements Observer {
         if (fuelAmtInput instanceof String) {
             String status = (String) fuelAmtInput;
             if (status.equals("Free")) {
-
                 this.submitBtn.setEnabled(true);
                 this.resetBtn.setEnabled(true);
                 this.fuelPump.setEnabled(true);
                 this.customerInput.setEditable(true);
+                this.customerInput.setText("");
                 this.amountMoney.setEditable(true);
+                this.amountMoney.setText("");
                 this.fuelAmount.setEditable(true);
+                this.fuelAmount.setText("");
                 this.discountType.setEditable(true);
             }
         }
@@ -588,23 +590,24 @@ public class FuelChargeForm extends javax.swing.JFrame implements Observer {
     }//GEN-LAST:event_fuelPumpItemStateChanged
 
     private boolean checkPriceFormInput() {
-        if(!Validator.numberInputValidator(this.newFuelPrice.getText()))
+        if (!Validator.numberInputValidator(this.newFuelPrice.getText())) {
             return false;
+        }
         return true;
     }
-    
+
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        
-        if(checkPriceFormInput() == true) {
-        if (Float.valueOf(this.newFuelPrice.getText()) > 0) {
-            FuelType fuelType = Helper.getFuelTypeByFuel(fuelTypes, this.fuelType.getSelectedItem().toString());
-            fuelType.setFuelPrice(new BigDecimal(this.newFuelPrice.getText()));
-            JOptionPane.showMessageDialog(null, "Fuel Price changed successfully.");
-        }
-        }
-        else
+
+        if (checkPriceFormInput() == true) {
+            if (Float.valueOf(this.newFuelPrice.getText()) > 0) {
+                FuelType fuelType = Helper.getFuelTypeByFuel(fuelTypes, this.fuelType.getSelectedItem().toString());
+                fuelType.setFuelPrice(new BigDecimal(this.newFuelPrice.getText()));
+                JOptionPane.showMessageDialog(null, "Fuel Price changed successfully.");
+            }
+        } else {
             JOptionPane.showMessageDialog(null, "Please input a valid fuel price.");
+        }
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -625,6 +628,8 @@ public class FuelChargeForm extends javax.swing.JFrame implements Observer {
             } catch (java.lang.NumberFormatException e) {
                 JOptionPane.showMessageDialog(null, "Please input a valid Customer ID.");
             }
+        } else {
+            this.discountType.setVisible(false);
         }
 
 // TODO add your handling  here:
